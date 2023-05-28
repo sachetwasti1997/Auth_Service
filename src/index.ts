@@ -3,7 +3,9 @@ import { app } from "./app";
 
 const start = async () => {
   try {
-    await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
+    await mongoose.connect(
+      "mongodb://auth-mongo-srv:27017/auth?directConnection=true"
+    );
     console.log('Connected to mongodb');
   } catch (err) {
     console.log(err);
