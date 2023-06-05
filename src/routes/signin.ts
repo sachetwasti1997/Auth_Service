@@ -28,7 +28,8 @@ async(req: Request, res: Response, next: NextFunction) => {
   if (!existingUser) {
     return next(new BadRequestError('Invalid Credentials'));
   }
-
+  console.log(existingUser);
+  
   const passwordMatch = await Password.compare(existingUser.password, password)
 
   if (!passwordMatch) {
@@ -42,6 +43,8 @@ async(req: Request, res: Response, next: NextFunction) => {
     {
       id: existingUser.id,
       email: existingUser.email,
+      firstName: existingUser.firstName,
+      lastName: existingUser.lastName,
     },
     process.env.JWT_KEY
   );

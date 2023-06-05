@@ -12,6 +12,8 @@ const router = express.Router();
 router.post(
   '/api/users/signup',
   [
+    body('firstName').notEmpty().withMessage('Please provide valid First Name'),
+    body('lastName').notEmpty().withMessage('Please provide valid Last Name'),
     body('email').isEmail().withMessage('Email must be valid!'),
     body('password')
       .isLength({ min: 4, max: 20 })
@@ -20,7 +22,7 @@ router.post(
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
 
-    const { email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -28,7 +30,7 @@ router.post(
       return next(new BadRequestError('Email Already in Use: ' + email));
     }
 
-    const user = User.build({ email, password });
+    const user = User.build({ firstName, lastName, email, password });
     await user.save();
 
     //Generate JWT
@@ -39,6 +41,8 @@ router.post(
       {
         id: user.id,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
       },
       process.env.JWT_KEY
     );
